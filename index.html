@@ -12,9 +12,9 @@ button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity
 .shell{position:fixed;top:0;left:0;width:100%;height:100dvh;display:flex;flex-direction:column;background:#f8fafc}
 .header{background:#fff;border-bottom:1px solid #e2e8f0;flex:none;z-index:3;box-shadow:0 1px 3px #0f172a08}
 .inner{max-width:600px;margin:auto;width:100%}.topline{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 8px}
-h1{font-size:16px;margin:0;font-weight:750;letter-spacing:-.35px}.tabs{display:flex;align-items:center;gap:14px;padding:0 16px 9px}
-.tab{border:0;background:none;padding:2px 0 4px;font-size:12px;font-weight:700;color:#94a3b8;border-bottom:2px solid transparent}
-.tab.active{color:#2563eb;border-bottom-color:#2563eb}.top-nav{flex:none;background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 16px;z-index:2}
+h1{font-size:16px;margin:0;font-weight:750;letter-spacing:-.35px}.tabs{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;gap:8px;padding:0 16px 10px}
+.tab{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;padding:9px 14px;font-size:13px;font-weight:750;color:#64748b;transition:background .15s,border-color .15s,color .15s,box-shadow .15s}
+.tab.active{color:#1d4ed8;background:#eff6ff;border-color:#93c5fd;box-shadow:inset 0 -2px 0 #2563eb}.tab:focus-visible{outline:2px solid #2563eb;outline-offset:2px}.top-nav{flex:none;background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 16px;z-index:2}
 .nav-row{display:grid;grid-template-columns:minmax(85px,1fr) minmax(104px,126px) minmax(85px,1fr);gap:10px;align-items:center}
 .nav-btn{height:35px;border-radius:9px;padding:0 10px;font-size:12px;font-weight:700;border:1px solid #cbd5e1;background:#f8fafc;color:#334155}
 .nav-btn.primary{border-color:#2563eb;background:#2563eb;color:white}.nav-btn.finish{background:#059669;border-color:#059669}
@@ -36,7 +36,7 @@ textarea.nav-input{min-height:76px;resize:vertical}.sub-panel{border-radius:9px;
 .button-row{display:flex;gap:8px;flex-wrap:wrap}.button-row .grow{flex:1}
 .notice{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:13px}
 .notice.warning{background:#fffbeb;color:#92400e;border-color:#fde68a}
-/* Aviso fixo de privacidade e armazenamento na aba Cache */
+/* Aviso fixo de privacidade e armazenamento na aba Fichas */
 .notice.privacy-notice{background:#f8fafc;border-color:#e2e8f0;color:#475569;font-size:11.5px;line-height:1.55}
 .privacy-notice .privacy-title{display:block;color:#334155;font-size:12px;font-weight:750;margin-bottom:3px}
 .privacy-notice .privacy-detail{display:block;margin-top:5px;font-weight:600;color:#b45309}
@@ -93,7 +93,7 @@ textarea.nav-input{min-height:76px;resize:vertical}.sub-panel{border-radius:9px;
 <header class="header">
   <div class="inner">
     <div class="topline"><h1>Ficha de Avaliação</h1><button id="btnClear" class="button" type="button">↶ Limpar</button></div>
-    <div class="tabs"><button class="tab active" id="tabFicha" type="button">Ficha</button><button class="tab" id="tabCache" type="button">Cache (<span id="cacheCount">0</span>)</button></div>
+    <div class="tabs"><button class="tab active" id="tabFicha" type="button" aria-pressed="true">Ficha</button><button class="tab" id="tabCache" type="button" aria-pressed="false">Fichas (<span id="cacheCount">0</span>)</button></div>
   </div>
 </header>
 <nav class="top-nav" id="topNav"><div class="inner nav-row">
@@ -142,7 +142,7 @@ textarea.nav-input{min-height:76px;resize:vertical}.sub-panel{border-radius:9px;
     <input type="text" id="f-suprailiaca" name="suprailiaca" data-label="Dobra Suprailíaca" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div></section>
 <section class="panel"><h2 class="section-title">Observações</h2><div class="field-row single"><div class="field"><label for="f-observacao">Observações</label>
     <textarea rows="3" id="f-observacao" name="observacao" data-label="Observações" class="nav-input" placeholder="Observações adicionais..." autocomplete="off"></textarea></div></div></section></form>
-    <div class="panel"><div class="button-row"><button class="button grow" id="btnCopy" type="button">▣ Copiar lista simples</button><button class="button blue" id="btnSave" type="button">Salvar no cache</button></div></div>
+    <div class="panel"><div class="button-row"><button class="button grow" id="btnCopy" type="button">▣ Copiar lista simples</button><button class="button blue" id="btnSave" type="button">Salvar ficha</button></div></div>
   </div>
   <div id="viewCache" class="hidden">
     <div id="storageNotice" class="notice hidden"></div>
@@ -361,7 +361,7 @@ function showStorageWarning(){
   if(storage.mode==='memory'){
     const detail=document.createElement('span');
     detail.className='privacy-detail';
-    detail.textContent='Atenção: este navegador bloqueou o armazenamento permanente. O cache pode ser perdido ao fechar a página. Exporte o CSV nesta sessão.';
+    detail.textContent='Atenção: este navegador bloqueou o armazenamento permanente. As fichas podem ser perdidas ao fechar a página. Exporte o CSV nesta sessão.';
     notice.append(detail);
   }else if(location.protocol==='file:' || location.protocol==='content:'){
     const detail=document.createElement('span');
@@ -446,7 +446,7 @@ async function saveCacheItem(){
   const persisted=await storage.set('eval_cache',JSON.stringify(cache));
   await storage.set('temp_draft',JSON.stringify(data));
   updateCount();
-  showToast(persisted?'Avaliação guardada no cache!':'Salva na sessão. Exporte um CSV!',persisted?'success':'warning');
+  showToast(persisted?'Ficha salva neste dispositivo!':'Salva na sessão. Exporte um CSV!',persisted?'success':'warning');
   return persisted;
 }
 $('btnSave').addEventListener('click',saveCacheItem);
@@ -457,6 +457,8 @@ function switchTab(tab){
   $('topNav').classList.toggle('hidden',tab!=='ficha');
   $('tabFicha').classList.toggle('active',tab==='ficha');
   $('tabCache').classList.toggle('active',tab==='cache');
+  $('tabFicha').setAttribute('aria-pressed',String(tab==='ficha'));
+  $('tabCache').setAttribute('aria-pressed',String(tab==='cache'));
   $('scrollArea').scrollTop=0;
   if(tab==='cache')renderCache();
 }
@@ -466,7 +468,7 @@ function element(tag,cl,txt){const n=document.createElement(tag);if(cl)n.classNa
 function renderCache(){
   showStorageWarning();updateCount();
   const root=$('cacheList');root.replaceChildren();
-  if(cache.length===0){root.append(element('p','muted','Nenhum registro salvo no cache.'));return;}
+  if(cache.length===0){root.append(element('p','muted','Nenhuma ficha salva neste dispositivo.'));return;}
   cache.forEach(item=>{
     const wrap=element('div','item'),info=element('div','info'),actions=element('div','actions');
     info.append(element('strong','',item.name||'Sem nome'),element('small','', 'Avaliação: '+(item.evalDate||'N/D')+' · Salvo em: '+(item.dateStr||'N/D')));
@@ -484,19 +486,19 @@ function renderCache(){
     btnCopy.addEventListener('click',async()=>{if(await copyText(formatList(item.data||{})))showToast('Registro copiado!');});
     const btnDelete=element('button','button danger','Excluir');btnDelete.type='button';
     btnDelete.addEventListener('click',async()=>{
-      if(!await askConfirm('Excluir avaliação?', 'A avaliação de '+(item.name||'este aluno')+' será removida do cache. Esta ação não pode ser desfeita.', 'Excluir avaliação'))return;
+      if(!await askConfirm('Excluir avaliação?', 'A avaliação de '+(item.name||'este aluno')+' será excluída das fichas salvas. Esta ação não pode ser desfeita.', 'Excluir avaliação'))return;
       cache=cache.filter(x=>x.id!==item.id);await storage.set('eval_cache',JSON.stringify(cache));renderCache();showToast('Registro excluído');
     });
     actions.append(btnLoad,btnCopy,btnDelete);wrap.append(info,actions);root.append(wrap);
   });
 }
 $('btnClear').addEventListener('click',async()=>{
-  if(!await askConfirm('Limpar ficha?', 'Todos os campos da ficha atual serão esvaziados. As avaliações já salvas no cache não serão apagadas.', 'Limpar campos'))return;
+  if(!await askConfirm('Limpar ficha?', 'Todos os campos da ficha atual serão esvaziados. As fichas já salvas não serão apagadas.', 'Limpar campos'))return;
   restoreForm({});await storage.remove('temp_draft');switchTab('ficha');highlight(0);showToast('Campos limpos');
 });
 $('btnClearCache').addEventListener('click',async()=>{
-  if(!await askConfirm('Apagar todo o histórico?', 'Todas as avaliações guardadas no cache serão excluídas. Exporte o CSV antes, se precisar preservá-las.', 'Apagar histórico'))return;
-  cache=[];await storage.remove('eval_cache');renderCache();showToast('Cache apagado');
+  if(!await askConfirm('Apagar todo o histórico?', 'Todas as fichas salvas neste dispositivo serão excluídas. Exporte o CSV antes, se precisar preservá-las.', 'Apagar histórico'))return;
+  cache=[];await storage.remove('eval_cache');renderCache();showToast('Fichas apagadas');
 });
 // Um registro por linha e um campo por coluna, pronto para Excel e Google Planilhas.
 const csvLabels = inputs.map(i => i.dataset.label);
