@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,interactive-widget=resizes-content">
+<meta name="theme-color" content="#ffffff">
+<title>Ficha de Avaliação Física</title>
+<style>
+:root {font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#0f172a;background:#f8fafc;font-synthesis:none}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:default}
+.shell{position:fixed;top:0;left:0;width:100%;height:100dvh;display:flex;flex-direction:column;background:#f8fafc}
+.header{background:#fff;border-bottom:1px solid #e2e8f0;flex:none;z-index:3;box-shadow:0 1px 3px #0f172a08}
+.inner{max-width:600px;margin:auto;width:100%}.topline{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 8px}
+h1{font-size:16px;margin:0;font-weight:750;letter-spacing:-.35px}.tabs{display:flex;align-items:center;gap:14px;padding:0 16px 9px}
+.tab{border:0;background:none;padding:2px 0 4px;font-size:12px;font-weight:700;color:#94a3b8;border-bottom:2px solid transparent}
+.tab.active{color:#2563eb;border-bottom-color:#2563eb}.top-nav{flex:none;background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 16px;z-index:2}
+.nav-row{display:grid;grid-template-columns:minmax(85px,1fr) minmax(104px,126px) minmax(85px,1fr);gap:10px;align-items:center}
+.nav-btn{height:35px;border-radius:9px;padding:0 10px;font-size:12px;font-weight:700;border:1px solid #cbd5e1;background:#f8fafc;color:#334155}
+.nav-btn.primary{border-color:#2563eb;background:#2563eb;color:white}.nav-btn.finish{background:#059669;border-color:#059669}
+.center{text-align:center;min-width:0}.center strong{display:block;color:#1d4ed8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.center small{font-size:10px;color:#94a3b8}
+main{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-padding-top:16px;padding:16px}
+.content{max-width:600px;width:100%;margin:0 auto;flex:1;display:flex;flex-direction:column}
+#viewFicha{padding-bottom:32px}
+#viewCache{flex:1;display:flex;flex-direction:column;min-height:0}.panel{background:white;border:1px solid #e2e8f0;border-radius:13px;padding:14px 15px;box-shadow:0 1px 3px #0f172a08;margin:0 0 14px}
+.section-title{font-size:12px;text-transform:uppercase;letter-spacing:.55px;color:#1d4ed8;margin:0 0 13px;border-bottom:1px solid #f1f5f9;padding-bottom:10px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}.field-row.single{grid-template-columns:1fr}
+.field{min-width:0}.field label{display:block;font-size:12px;font-weight:650;color:#475569;margin-bottom:6px}
+.nav-input{display:block;width:100%;border:1px solid #cbd5e1;border-radius:9px;background:#f8fafc;font-size:14px;color:#0f172a;outline:none;padding:10px 11px;min-height:42px;transition:border .15s,box-shadow .15s;scroll-margin-top:20px}
+.nav-input:focus,.nav-input.input-active{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb20;background:#fff}
+textarea.nav-input{min-height:76px;resize:vertical}.sub-panel{border-radius:9px;border:1px solid #f1f5f9;background:#f8fafc;padding:10px;margin-top:12px}
+.sub-panel h3{font-size:11px;text-transform:uppercase;letter-spacing:.35px;color:#64748b;margin:0 0 2px}.sub-panel .nav-input{background:#fff}
+.button{border:1px solid #e2e8f0;border-radius:9px;background:#f1f5f9;color:#334155;padding:10px 12px;font-size:12px;font-weight:700;min-height:37px}
+.button.blue{background:#2563eb;border-color:#2563eb;color:#fff}.button.danger{background:#fff1f2;border-color:#ffe4e6;color:#be123c}
+.button-row{display:flex;gap:8px;flex-wrap:wrap}.button-row .grow{flex:1}
+.notice{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:13px}
+.notice.warning{background:#fffbeb;color:#92400e;border-color:#fde68a}
+/* Aviso fixo de privacidade e armazenamento na aba Cache */
+.notice.privacy-notice{background:#f8fafc;border-color:#e2e8f0;color:#475569;font-size:11.5px;line-height:1.55}
+.privacy-notice .privacy-title{display:block;color:#334155;font-size:12px;font-weight:750;margin-bottom:3px}
+.privacy-notice .privacy-detail{display:block;margin-top:5px;font-weight:600;color:#b45309}
+.muted{font-size:12px;color:#64748b;line-height:1.5;margin:7px 0}
+.item{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:12px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:9px;box-shadow:0 1px 3px #0f172a08}
+.item .info{min-width:0;flex:1}.item strong{display:block;font-size:13px;overflow-wrap:anywhere}.item small{display:block;font-size:11px;line-height:1.5;color:#64748b}
+.item .actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.item .button{padding:7px 8px;min-height:30px}
+/* Avisos com aparência de notificação do próprio aplicativo */
+.toast{position:fixed;z-index:40;top:98px;left:50%;transform:translateX(-50%);width:min(390px,calc(100vw - 28px));display:flex;gap:11px;align-items:center;padding:12px 12px 14px;background:#fff;border:1px solid #e2e8f0;border-radius:15px;box-shadow:0 12px 32px #0f172a20,0 2px 6px #0f172a0c;text-align:left;overflow:hidden;animation:toast-appear .22s cubic-bezier(.2,.8,.2,1) both}
+.toast-icon{width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:11px;background:#dcfce7;color:#047857;font-weight:850;font-size:19px}
+.toast-content{flex:1;min-width:0}.toast-title{display:block;font-size:12px;line-height:1.3;font-weight:800;color:#0f172a;margin-bottom:2px}
+.toast-message{display:block;font-size:12px;line-height:1.4;color:#475569;overflow-wrap:anywhere}
+.toast-dismiss{align-self:flex-start;display:grid;place-items:center;width:25px;height:25px;flex:none;border:0;border-radius:8px;background:transparent;color:#94a3b8;font-size:20px;line-height:1}
+.toast-dismiss:active{background:#f1f5f9}.toast-progress{position:absolute;bottom:0;left:0;height:3px;width:100%;background:#10b981;transform-origin:left;animation:toast-countdown 3.3s linear both}
+.toast[data-type="warning"] .toast-icon{color:#b45309;background:#fef3c7}.toast[data-type="warning"] .toast-progress{background:#f59e0b}
+.toast[data-type="error"] .toast-icon{color:#be123c;background:#ffe4e6}.toast[data-type="error"] .toast-progress{background:#e11d48}
+.toast[data-type="info"] .toast-icon{color:#2563eb;background:#dbeafe}.toast[data-type="info"] .toast-progress{background:#3b82f6}
+@keyframes toast-appear{from{opacity:0;transform:translate(-50%,-10px) scale(.975)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes toast-countdown{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@media (prefers-reduced-motion:reduce){.toast{animation:none}.toast-progress{animation:none}}
+/* Rodapé compacto: três contatos alinhados em uma linha, mesmo no celular. */
+.cache-footer{border-top:1px solid #e2e8f0;margin:auto 0 0;padding:12px 2px 2px;text-align:center}
+.cache-footer .footer-byline{color:#94a3b8;font-size:10px;margin:0 0 7px;line-height:1.4}
+.cache-footer .footer-byline strong{color:#64748b;font-weight:750}
+.footer-links{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,.75fr) minmax(0,1.4fr);gap:6px;align-items:stretch;max-width:368px;margin:0 auto}
+.footer-link{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:31px;padding:7px 5px;background:white;border:1px solid #e2e8f0;border-radius:8px;color:#475569;text-decoration:none;font-size:10px;font-weight:650;line-height:1.15;white-space:nowrap;box-shadow:0 1px 2px #0f172a07;transition:border-color .15s,background .15s}
+.footer-link:active,.footer-link:focus-visible{background:#eff6ff;border-color:#93c5fd;outline:none}
+.footer-link svg{width:13px;height:13px;flex:none;stroke:#64748b}
+.footer-link span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:350px){.footer-links{gap:4px}.footer-link{gap:3px;padding:6px 3px;font-size:9.5px}.footer-link svg{width:12px;height:12px}}
+
+.hidden{display:none!important}#fileImport{display:none}
+.cache-tools .section-title{margin-bottom:12px}
+.cache-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cache-actions .button{min-height:42px;background:#f8fafc}
+.cache-cleanup{margin-top:12px;padding-top:10px;border-top:1px solid #f1f5f9;text-align:right}
+.cache-cleanup .button{background:transparent;border:0;padding:4px 0;min-height:28px;font-size:11px}
+
+.dialog-bg{position:fixed;inset:0;background:#0f172aaa;display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.dialog{background:white;border-radius:14px;width:min(100%,530px);padding:16px}.dialog h3{margin:0 0 6px;font-size:15px}.dialog p{font-size:12px;color:#64748b}
+.dialog textarea{width:100%;min-height:190px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font-size:12px}
+.dialog.confirm-dialog{max-width:370px;padding:20px;box-shadow:0 18px 50px #0f172a30}
+.dialog.confirm-dialog h3{font-size:16px;font-weight:750;margin-bottom:8px}
+.dialog.confirm-dialog p{font-size:13px;line-height:1.55;margin:0 0 20px;color:#475569}
+.dialog.confirm-dialog .button-row{justify-content:flex-end;gap:10px}
+.dialog.confirm-dialog .button{min-width:94px}
+.dialog.confirm-dialog .button.danger-strong{background:#e11d48;color:#fff;border-color:#e11d48}
+.dialog-bg{overscroll-behavior:contain}
+@media(min-width:640px){.topline,.tabs{padding-left:0;padding-right:0}}
+</style>
+</head>
+<body>
+<div class="shell" id="appShell">
+<header class="header">
+  <div class="inner">
+    <div class="topline"><h1>Ficha de Avaliação</h1><button id="btnClear" class="button" type="button">↶ Limpar</button></div>
+    <div class="tabs"><button class="tab active" id="tabFicha" type="button">Ficha</button><button class="tab" id="tabCache" type="button">Cache (<span id="cacheCount">0</span>)</button></div>
+  </div>
+</header>
+<nav class="top-nav" id="topNav"><div class="inner nav-row">
+<button class="nav-btn" id="btnPrev" type="button">‹ Anterior</button>
+<div class="center"><strong id="fieldIndicator">Avaliador</strong><small id="fieldCounter">1 / 29</small></div>
+<button class="nav-btn primary" id="btnNext" type="button">Próximo ›</button>
+</div></nav>
+<div class="toast hidden" id="toast" data-type="success" role="status" aria-live="polite" aria-atomic="true">
+  <div class="toast-icon" id="toastIcon" aria-hidden="true">✓</div>
+  <div class="toast-content"><strong class="toast-title" id="toastTitle">Tudo certo!</strong><span class="toast-message" id="toastMessage"></span></div>
+  <button class="toast-dismiss" id="toastDismiss" type="button" aria-label="Dispensar aviso">×</button>
+  <div class="toast-progress" id="toastProgress" aria-hidden="true"></div>
+</div>
+<main id="scrollArea"><div class="content">
+  <div id="viewFicha">
+    <form id="evalForm" autocomplete="off"><section class="panel"><h2 class="section-title">Identificação</h2><div class="field-row single"><div class="field"><label for="f-avaliador">Avaliador</label>
+    <input type="text" id="f-avaliador" name="avaliador" data-label="Avaliador" class="nav-input" placeholder="Nome do avaliador" autocomplete="off"></input></div></div><div class="field-row "><div class="field"><label for="f-data">Data</label>
+    <input type="text" id="f-data" name="data" data-label="Data da Avaliação" class="nav-input" placeholder="DD/MM/AAAA" autocomplete="off" maxlength="10"></input></div><div class="field"><label for="f-matricula">Matrícula</label>
+    <input type="text" id="f-matricula" name="matricula" data-label="Matrícula" class="nav-input" placeholder="Nº da matrícula" autocomplete="off"></input></div></div><div class="field-row single"><div class="field"><label for="f-nome">Nome do Aluno</label>
+    <input type="text" id="f-nome" name="nome" data-label="Nome do Aluno" class="nav-input" placeholder="Nome completo" autocomplete="off"></input></div></div><div class="field-row "><div class="field"><label for="f-altura">Altura (m)</label>
+    <input type="text" id="f-altura" name="altura" data-label="Altura" class="nav-input" placeholder="Ex.: 1,85" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-peso">Peso (kg)</label>
+    <input type="text" id="f-peso" name="peso" data-label="Peso" class="nav-input" placeholder="Ex.: 70" autocomplete="off" inputmode="decimal"></input></div></div></section>
+<section class="panel"><h2 class="section-title">Circunferências (cm)</h2><div class="field-row "><div class="field"><label for="f-escapular">Escapular</label>
+    <input type="text" id="f-escapular" name="escapular" data-label="Escapular" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-quadril">Quadril</label>
+    <input type="text" id="f-quadril" name="quadril" data-label="Quadril" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="field-row "><div class="field"><label for="f-torax">Tórax</label>
+    <input type="text" id="f-torax" name="torax" data-label="Tórax" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-cintura">Cintura</label>
+    <input type="text" id="f-cintura" name="cintura" data-label="Cintura" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="field-row single"><div class="field"><label for="f-abdomen">Abdómen</label>
+    <input type="text" id="f-abdomen" name="abdomen" data-label="Abdómen" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="sub-panel"><h3>Membros Superiores</h3><div class="field-row "><div class="field"><label for="f-braco_cont_d">Braço Cont. D</label>
+    <input type="text" id="f-braco_cont_d" name="braco_cont_d" data-label="Braço Contraído D" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-braco_cont_e">Braço Cont. E</label>
+    <input type="text" id="f-braco_cont_e" name="braco_cont_e" data-label="Braço Contraído E" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="field-row "><div class="field"><label for="f-braco_relax_d">Braço Relax. D</label>
+    <input type="text" id="f-braco_relax_d" name="braco_relax_d" data-label="Braço Relaxado D" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-braco_relax_e">Braço Relax. E</label>
+    <input type="text" id="f-braco_relax_e" name="braco_relax_e" data-label="Braço Relaxado E" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="field-row "><div class="field"><label for="f-antebraco_d">Antebraço D</label>
+    <input type="text" id="f-antebraco_d" name="antebraco_d" data-label="Antebraço D" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-antebraco_e">Antebraço E</label>
+    <input type="text" id="f-antebraco_e" name="antebraco_e" data-label="Antebraço E" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div></div><div class="sub-panel"><h3>Membros Inferiores</h3><div class="field-row "><div class="field"><label for="f-coxa_d">Coxa D</label>
+    <input type="text" id="f-coxa_d" name="coxa_d" data-label="Coxa D" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-coxa_e">Coxa E</label>
+    <input type="text" id="f-coxa_e" name="coxa_e" data-label="Coxa E" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="field-row "><div class="field"><label for="f-panturrilha_d">Panturrilha D</label>
+    <input type="text" id="f-panturrilha_d" name="panturrilha_d" data-label="Panturrilha D" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-panturrilha_e">Panturrilha E</label>
+    <input type="text" id="f-panturrilha_e" name="panturrilha_e" data-label="Panturrilha E" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div></div></section>
+<section class="panel"><h2 class="section-title">Dobras Cutâneas (mm)</h2><div class="field-row "><div class="field"><label for="f-tricipital">Tricipital</label>
+    <input type="text" id="f-tricipital" name="tricipital" data-label="Dobra Tricipital" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-subescapular">Subescapular</label>
+    <input type="text" id="f-subescapular" name="subescapular" data-label="Dobra Subescapular" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="field-row "><div class="field"><label for="f-axiliar_media">Axilar Média</label>
+    <input type="text" id="f-axiliar_media" name="axiliar_media" data-label="Dobra Axilar Média" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-abdominal">Abdominal</label>
+    <input type="text" id="f-abdominal" name="abdominal" data-label="Dobra Abdominal" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="field-row "><div class="field"><label for="f-coxa_dobra">Coxa</label>
+    <input type="text" id="f-coxa_dobra" name="coxa_dobra" data-label="Dobra Coxa" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div><div class="field"><label for="f-peitoral">Peitoral</label>
+    <input type="text" id="f-peitoral" name="peitoral" data-label="Dobra Peitoral" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div><div class="field-row single"><div class="field"><label for="f-suprailiaca">Suprailíaca</label>
+    <input type="text" id="f-suprailiaca" name="suprailiaca" data-label="Dobra Suprailíaca" class="nav-input" placeholder="" autocomplete="off" inputmode="decimal"></input></div></div></section>
+<section class="panel"><h2 class="section-title">Observações</h2><div class="field-row single"><div class="field"><label for="f-observacao">Observações</label>
+    <textarea rows="3" id="f-observacao" name="observacao" data-label="Observações" class="nav-input" placeholder="Observações adicionais..." autocomplete="off"></textarea></div></div></section></form>
+    <div class="panel"><div class="button-row"><button class="button grow" id="btnCopy" type="button">▣ Copiar lista simples</button><button class="button blue" id="btnSave" type="button">Salvar no cache</button></div></div>
+  </div>
+  <div id="viewCache" class="hidden">
+    <div id="storageNotice" class="notice hidden"></div>
+    <div class="panel cache-tools">
+      <h2 class="section-title">Planilha de avaliações</h2>
+      <div class="cache-actions">
+        <button class="button" id="btnExport" type="button">Exportar CSV</button>
+        <button class="button" id="btnImport" type="button">Importar CSV</button>
+      </div>
+      <div class="cache-cleanup"><button class="button danger" id="btnClearCache" type="button">Apagar histórico</button></div>
+    </div>
+    <div id="cacheList"></div><input type="file" id="fileImport" accept=".csv,text/csv,text/plain">
+    <footer class="cache-footer">
+      <p class="footer-byline">Desenvolvido por <strong>Adriano Oliveira</strong></p>
+      <div class="footer-links">
+        <a class="footer-link" href="https://github.com/0KYR4" target="_blank" rel="noopener noreferrer" aria-label="Abrir GitHub de Adriano Oliveira, 0KYR4">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          <span>GitHub · 0KYR4</span>
+        </a>
+        <a class="footer-link" href="mailto:adrianno.di@gmail.com" aria-label="Enviar e-mail para adrianno.di@gmail.com">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+          <span>E-mail</span>
+        </a>
+        <a class="footer-link" href="tel:+5519998347416" aria-label="Ligar para (19) 99834-7416">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.91.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.25a2 2 0 0 1 2.11-.45c.9.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg>
+          <span>(19) 99834-7416</span>
+        </a>
+      </div>
+    </footer>
+  </div>
+</div></main>
+</div>
+<div id="copyDialog" class="dialog-bg hidden"><div class="dialog">
+  <h3>Seleção manual</h3>
+  <p>O navegador não permitiu a cópia automática neste arquivo local. Mantenha o dedo no texto para selecionar e copiar; para copiar diretamente, abra a ficha em uma página HTTPS.</p>
+  <textarea id="copyFallback" readonly></textarea>
+  <div class="button-row" style="margin-top:10px"><button class="button blue grow" id="btnRetryCopy" type="button">Tentar copiar</button><button class="button" id="btnCloseDialog" type="button">Fechar</button></div>
+</div></div>
+<!-- Janelas de confirmação internas, sem alert() ou confirm() do navegador -->
+<div id="actionDialog" class="dialog-bg hidden" role="presentation">
+  <div class="dialog confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="actionTitle" aria-describedby="actionMessage">
+    <h3 id="actionTitle"></h3>
+    <p id="actionMessage"></p>
+    <div class="button-row">
+      <button id="actionCancel" class="button" type="button">Cancelar</button>
+      <button id="actionAccept" class="button blue" type="button">Confirmar</button>
+    </div>
+  </div>
+</div>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const inputs = Array.from(document.querySelectorAll('.nav-input'));
+const shell = $('appShell');
+let currentIndex = 0;
+let cache = [];
+let cacheReady = false;
+let saveTimer = null;
+let toastTimer = null;
+let currentTab = 'ficha';
+
+function hideToast(){
+  clearTimeout(toastTimer);
+  $('toast').classList.add('hidden');
+}
+function showToast(message, type='success') {
+  const meta={
+    success:{title:'Tudo certo!',icon:'✓'},
+    info:{title:'Aviso',icon:'i'},
+    warning:{title:'Atenção',icon:'!'},
+    error:{title:'Não foi possível',icon:'!'}
+  };
+  const kind=meta[type] ? type : 'info';
+  const t=$('toast');
+  t.dataset.type=kind;
+  $('toastIcon').textContent=meta[kind].icon;
+  $('toastTitle').textContent=meta[kind].title;
+  $('toastMessage').textContent=message;
+  clearTimeout(toastTimer);
+  // Reinicia a entrada e a barrinha quando chegam avisos em sequência.
+  t.classList.add('hidden');
+  void t.offsetWidth;
+  $('toastProgress').style.animation='none';
+  void $('toastProgress').offsetWidth;
+  $('toastProgress').style.animation='';
+  t.classList.remove('hidden');
+  toastTimer=setTimeout(hideToast,3300);
+}
+$('toastDismiss').addEventListener('click',hideToast);
+// Confirmações integradas à interface, sem caixas nativas do navegador.
+let dialogPending = null;
+let dialogPreviousFocus = null;
+function closeActionDialog(accepted){
+  if(!dialogPending)return;
+  const resolve=dialogPending;
+  dialogPending=null;
+  $('actionDialog').classList.add('hidden');
+  if(dialogPreviousFocus && dialogPreviousFocus.isConnected && !dialogPreviousFocus.closest('.hidden')){
+    try{dialogPreviousFocus.focus({preventScroll:true});}catch(e){}
+  }
+  dialogPreviousFocus=null;
+  resolve(accepted);
+}
+function appDialog({title, message, danger=false, confirmLabel='Confirmar', cancel=true}){
+  if(dialogPending)return Promise.resolve(false);
+  dialogPreviousFocus=document.activeElement;
+  if(dialogPreviousFocus?.matches('input,textarea'))dialogPreviousFocus.blur();
+  $('actionTitle').textContent=title;
+  $('actionMessage').textContent=message;
+  $('actionAccept').textContent=confirmLabel;
+  $('actionAccept').className='button '+(danger?'danger-strong':'blue');
+  $('actionCancel').classList.toggle('hidden',!cancel);
+  $('actionDialog').classList.remove('hidden');
+  $('actionAccept').focus({preventScroll:true});
+  return new Promise(resolve=>{dialogPending=resolve;});
+}
+$('actionAccept').addEventListener('click',()=>closeActionDialog(true));
+$('actionCancel').addEventListener('click',()=>closeActionDialog(false));
+$('actionDialog').addEventListener('click',e=>{if(e.target===$('actionDialog'))closeActionDialog(false);});
+document.addEventListener('keydown',e=>{
+  if(!$('actionDialog').classList.contains('hidden')){
+    if(e.key==='Escape'){e.preventDefault();closeActionDialog(false);}
+    else if(e.key==='Tab'){
+      const allowed=[$('actionCancel'),$('actionAccept')].filter(b=>!b.classList.contains('hidden'));
+      if(allowed.length && !allowed.includes(document.activeElement)){
+        e.preventDefault();allowed[0].focus();
+      }else if(allowed.length){
+        const at=allowed.indexOf(document.activeElement),step=e.shiftKey?-1:1;
+        e.preventDefault();allowed[(at+step+allowed.length)%allowed.length].focus();
+      }
+    }
+  }
+});
+function askConfirm(title,message,confirmLabel='Excluir',danger=true){
+  return appDialog({title,message,confirmLabel,danger});
+}
+function showAppAlert(title,message){
+  return appDialog({title,message,confirmLabel:'Entendi',cancel:false});
+}
+
+function syncViewportHeight() {
+  if(window.visualViewport){shell.style.height=window.visualViewport.height+'px';shell.style.top=window.visualViewport.offsetTop+'px';}
+  else {shell.style.height=window.innerHeight+'px';shell.style.top='0px';}
+}
+window.addEventListener('resize', syncViewportHeight);
+if(window.visualViewport){window.visualViewport.addEventListener('resize',syncViewportHeight);window.visualViewport.addEventListener('scroll',syncViewportHeight);}
+syncViewportHeight();
+
+// O armazenamento de arquivos file:// é variável entre navegadores.
+// Preferimos localStorage; se estiver bloqueado, tentamos IndexedDB.
+const storage = {
+  mode:'memory', mem:{}, db:null,
+  async init(){
+    try {
+      const key='__ficha_test__';
+      localStorage.setItem(key,'ok');
+      if(localStorage.getItem(key)!=='ok')throw Error('blocked');
+      localStorage.removeItem(key);
+      this.mode='localStorage'; return;
+    }catch(e){}
+    try {
+      this.db=await new Promise((resolve,reject)=>{
+        const req=indexedDB.open('ficha_avaliacao_offline_v2',1);
+        req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('kv'))req.result.createObjectStore('kv');};
+        req.onsuccess=()=>resolve(req.result);
+        req.onerror=()=>reject(req.error);
+        req.onblocked=()=>reject(Error('blocked'));
+      });
+      this.mode='indexedDB';return;
+    }catch(e){}
+    this.mode='memory';
+  },
+  async get(key){
+    try{
+      if(this.mode==='localStorage')return localStorage.getItem(key);
+      if(this.mode==='indexedDB')return await new Promise((resolve,reject)=>{
+        const req=this.db.transaction('kv','readonly').objectStore('kv').get(key);
+        req.onsuccess=()=>resolve(req.result??null); req.onerror=()=>reject(req.error);
+      });
+    }catch(e){this.mode='memory';showStorageWarning();}
+    return this.mem[key]??null;
+  },
+  async set(key,val){
+    this.mem[key]=val;
+    try{
+      if(this.mode==='localStorage'){localStorage.setItem(key,val);return true;}
+      if(this.mode==='indexedDB')return await new Promise((resolve,reject)=>{
+        const tx=this.db.transaction('kv','readwrite');tx.objectStore('kv').put(val,key);
+        tx.oncomplete=()=>resolve(true);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);
+      });
+    }catch(e){this.mode='memory';showStorageWarning();}
+    return false;
+  },
+  async remove(key){
+    delete this.mem[key];
+    try{
+      if(this.mode==='localStorage'){localStorage.removeItem(key);return;}
+      if(this.mode==='indexedDB')await new Promise((resolve,reject)=>{
+        const tx=this.db.transaction('kv','readwrite');tx.objectStore('kv').delete(key);
+        tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);
+      });
+    }catch(e){this.mode='memory';showStorageWarning();}
+  }
+};
+function showStorageWarning(){
+  const notice=$('storageNotice');
+  notice.className='notice privacy-notice';
+  // Permanente, inclusive quando hospedado em HTTPS. Nenhum dado da ficha é enviado ao servidor.
+  notice.replaceChildren();
+  const title=document.createElement('strong');
+  title.className='privacy-title';
+  title.textContent='Privacidade e armazenamento';
+  const body=document.createElement('span');
+  body.textContent='As avaliações ficam salvas somente no navegador deste dispositivo. O site não recebe nem guarda cópias das fichas. Ao limpar os dados do navegador, usar modo anônimo ou trocar de aparelho, você pode perder o histórico. Exporte um CSV regularmente para manter uma cópia de segurança.';
+  notice.append(title,body);
+  if(storage.mode==='memory'){
+    const detail=document.createElement('span');
+    detail.className='privacy-detail';
+    detail.textContent='Atenção: este navegador bloqueou o armazenamento permanente. O cache pode ser perdido ao fechar a página. Exporte o CSV nesta sessão.';
+    notice.append(detail);
+  }else if(location.protocol==='file:' || location.protocol==='content:'){
+    const detail=document.createElement('span');
+    detail.className='privacy-detail';
+    detail.textContent='Este HTML está aberto como arquivo local: renomear ou mover o arquivo pode separar o histórico salvo.';
+    notice.append(detail);
+  }
+}
+function parseJson(raw, fallback){try{let v=JSON.parse(raw);return v===null?fallback:v;}catch(e){return fallback;}}
+function getFormData(){return Object.fromEntries(inputs.map(i=>[i.dataset.label,i.value.trim()]));}
+function restoreForm(data){inputs.forEach(i=>{i.value=typeof data?.[i.dataset.label]==='string'?data[i.dataset.label]:'';});}
+function scheduleDraftSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{storage.set('temp_draft',JSON.stringify(getFormData()));},100);
+}
+function formatList(data){return inputs.map(i=>i.dataset.label+': '+(data[i.dataset.label]||'-')).join('\n');}
+function updateCount(){$('cacheCount').textContent=cache.length;}
+function highlight(index){
+  currentIndex=Math.max(0,Math.min(index,inputs.length-1));
+  inputs.forEach((e,i)=>e.classList.toggle('input-active',i===currentIndex));
+  $('fieldIndicator').textContent=inputs[currentIndex].dataset.label;
+  $('fieldCounter').textContent=(currentIndex+1)+' / '+inputs.length;
+  $('btnNext').textContent=currentIndex===inputs.length-1?'✓ Concluir':'Próximo ›';
+  $('btnNext').classList.toggle('finish',currentIndex===inputs.length-1);
+  $('btnPrev').disabled=currentIndex===0;
+}
+function focusField(index){
+  if(index<0||index>=inputs.length)return;
+  highlight(index);
+  const el=inputs[index];
+  try{el.focus({preventScroll:true});}catch(e){el.focus();}
+  setTimeout(()=>{
+    const area=$('scrollArea'); const r=el.getBoundingClientRect();const ar=area.getBoundingClientRect();
+    area.scrollBy({top:r.top-ar.top-Math.max(16,Math.min(48,ar.height/5)),behavior:'smooth'});
+  },90);
+}
+function formatDate(value){let v=value.replace(/\D/g,'').slice(0,8);if(v.length>4)return v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4);if(v.length>2)return v.slice(0,2)+'/'+v.slice(2);return v;}
+inputs.forEach((input,index)=>{
+  input.addEventListener('focus',()=>{highlight(index);syncViewportHeight();});
+  input.addEventListener('input',()=>{if(input.name==='data'){const pos=input.selectionStart;input.value=formatDate(input.value);}scheduleDraftSave();});
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'&&input.tagName!=='TEXTAREA'){e.preventDefault();goNext();}});
+});
+$('evalForm').addEventListener('submit',e=>e.preventDefault());
+$('btnPrev').addEventListener('click',()=>focusField(currentIndex-1));
+$('btnNext').addEventListener('click',goNext);
+async function goNext(){if(currentIndex<inputs.length-1){focusField(currentIndex+1);return;}
+  inputs[currentIndex].blur();await saveCacheItem();await copyCurrent();
+}
+function oldCopy(text){
+  let ta;
+  const oldFocus=document.activeElement;
+  try{
+    ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');
+    ta.style.cssText='position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;z-index:-1;';
+    document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length);
+    const copied=document.execCommand('copy');
+    if(oldFocus && oldFocus!==document.body && typeof oldFocus.focus==='function')try{oldFocus.focus({preventScroll:true});}catch(e){}
+    return !!copied;
+  }catch(e){return false;}
+  finally{if(ta)ta.remove();}
+}
+async function copyText(text){
+  const local=location.protocol==='file:'||location.protocol==='content:';
+  // Em arquivo local, execCommand pode funcionar onde a API moderna é negada.
+  if(local && oldCopy(text))return true;
+  if(navigator.clipboard && typeof navigator.clipboard.writeText==='function'){
+    try{await navigator.clipboard.writeText(text);return true;}catch(e){}
+  }
+  if(!local && oldCopy(text))return true;
+  $('copyFallback').value=text;$('copyDialog').classList.remove('hidden');
+  return false;
+}
+async function copyCurrent(){const ok=await copyText(formatList(getFormData()));if(ok)showToast('Lista copiada diretamente!');return ok;}
+$('btnCopy').addEventListener('click',copyCurrent);
+$('btnRetryCopy').addEventListener('click',async()=>{const ok=await copyText($('copyFallback').value);if(ok){$('copyDialog').classList.add('hidden');showToast('Texto copiado!');}});
+$('btnCloseDialog').addEventListener('click',()=>$('copyDialog').classList.add('hidden'));
+
+async function saveCacheItem(){
+  const data=getFormData();
+  const item={id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),dateStr:new Date().toLocaleString('pt-BR'),name:data['Nome do Aluno']||'Sem nome',evalDate:data['Data da Avaliação']||'',data};
+  cache.unshift(item);
+  const persisted=await storage.set('eval_cache',JSON.stringify(cache));
+  await storage.set('temp_draft',JSON.stringify(data));
+  updateCount();
+  showToast(persisted?'Avaliação guardada no cache!':'Salva na sessão. Exporte um CSV!',persisted?'success':'warning');
+  return persisted;
+}
+$('btnSave').addEventListener('click',saveCacheItem);
+function switchTab(tab){
+  currentTab=tab;
+  $('viewFicha').classList.toggle('hidden',tab!=='ficha');
+  $('viewCache').classList.toggle('hidden',tab!=='cache');
+  $('topNav').classList.toggle('hidden',tab!=='ficha');
+  $('tabFicha').classList.toggle('active',tab==='ficha');
+  $('tabCache').classList.toggle('active',tab==='cache');
+  $('scrollArea').scrollTop=0;
+  if(tab==='cache')renderCache();
+}
+$('tabFicha').addEventListener('click',()=>switchTab('ficha'));
+$('tabCache').addEventListener('click',()=>switchTab('cache'));
+function element(tag,cl,txt){const n=document.createElement(tag);if(cl)n.className=cl;if(txt!==undefined)n.textContent=txt;return n;}
+function renderCache(){
+  showStorageWarning();updateCount();
+  const root=$('cacheList');root.replaceChildren();
+  if(cache.length===0){root.append(element('p','muted','Nenhum registro salvo no cache.'));return;}
+  cache.forEach(item=>{
+    const wrap=element('div','item'),info=element('div','info'),actions=element('div','actions');
+    info.append(element('strong','',item.name||'Sem nome'),element('small','', 'Avaliação: '+(item.evalDate||'N/D')+' · Salvo em: '+(item.dateStr||'N/D')));
+    const btnLoad=element('button','button blue','Abrir');btnLoad.type='button';
+    btnLoad.addEventListener('click',async()=>{
+      // Abrir somente exibe os dados; a pessoa escolhe qual campo quer editar.
+      if(document.activeElement instanceof HTMLElement)document.activeElement.blur();
+      restoreForm(item.data||{});
+      await storage.set('temp_draft',JSON.stringify(getFormData()));
+      switchTab('ficha');
+      highlight(0);
+      showToast('Ficha aberta!');
+    });
+    const btnCopy=element('button','button','Copiar');btnCopy.type='button';
+    btnCopy.addEventListener('click',async()=>{if(await copyText(formatList(item.data||{})))showToast('Registro copiado!');});
+    const btnDelete=element('button','button danger','Excluir');btnDelete.type='button';
+    btnDelete.addEventListener('click',async()=>{
+      if(!await askConfirm('Excluir avaliação?', 'A avaliação de '+(item.name||'este aluno')+' será removida do cache. Esta ação não pode ser desfeita.', 'Excluir avaliação'))return;
+      cache=cache.filter(x=>x.id!==item.id);await storage.set('eval_cache',JSON.stringify(cache));renderCache();showToast('Registro excluído');
+    });
+    actions.append(btnLoad,btnCopy,btnDelete);wrap.append(info,actions);root.append(wrap);
+  });
+}
+$('btnClear').addEventListener('click',async()=>{
+  if(!await askConfirm('Limpar ficha?', 'Todos os campos da ficha atual serão esvaziados. As avaliações já salvas no cache não serão apagadas.', 'Limpar campos'))return;
+  restoreForm({});await storage.remove('temp_draft');switchTab('ficha');highlight(0);showToast('Campos limpos');
+});
+$('btnClearCache').addEventListener('click',async()=>{
+  if(!await askConfirm('Apagar todo o histórico?', 'Todas as avaliações guardadas no cache serão excluídas. Exporte o CSV antes, se precisar preservá-las.', 'Apagar histórico'))return;
+  cache=[];await storage.remove('eval_cache');renderCache();showToast('Cache apagado');
+});
+// Um registro por linha e um campo por coluna, pronto para Excel e Google Planilhas.
+const csvLabels = inputs.map(i => i.dataset.label);
+const csvHeaders = ['ID', 'Salvo em', ...csvLabels];
+function csvProtect(value){
+  const str=String(value ?? '');
+  // Evita que conteúdo digitado seja interpretado como fórmula por planilhas.
+  return /^\s*[=+@-]/.test(str) && !/^\s*-?\d+(?:[.,]\d+)?\s*$/.test(str) ? "'"+str : str;
+}
+function csvEscape(value){return '"'+csvProtect(value).replace(/"/g,'""')+'"';}
+function csvUnprotect(value){
+  return value.startsWith("'") && /^\s*[=+@-]/.test(value.slice(1)) ? value.slice(1) : value;
+}
+function exportCsv(){
+  if(!cache.length){showToast('Salve uma avaliação antes de exportar.','warning');return;}
+  const rows=[csvHeaders, ...cache.map(item=>[
+    item.id||'',item.dateStr||'',...csvLabels.map(label=>item.data?.[label]??'')
+  ])];
+  const content='\uFEFF'+rows.map(row=>row.map(csvEscape).join(';')).join('\r\n')+'\r\n';
+  const blob=new Blob([content],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;
+  a.download='avaliacoes_fisicas_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  showToast('Planilha CSV preparada!');
+}
+function parseCsv(text){
+  let content=text.replace(/^\uFEFF/,'');
+  const declared=content.match(/^sep=([;,\t])\r?\n/i);
+  let sep;
+  if(declared){sep=declared[1];content=content.slice(declared[0].length);}
+  else {
+    const firstLine=content.split(/\r?\n/,1)[0];
+    sep=firstLine.includes(';')?';':(firstLine.includes('\t')?'\t':',');
+  }
+  const rows=[];let row=[],cell='',quoted=false;
+  for(let i=0;i<content.length;i++){
+    const c=content[i];
+    if(c==='"'){
+      if(quoted && content[i+1]==='"'){cell+='"';i++;}
+      else if(quoted || !cell){quoted=!quoted;}
+      else cell+='"';
+    }else if(c===sep && !quoted){row.push(cell);cell='';}
+    else if((c==='\r'||c==='\n') && !quoted){
+      if(c==='\r' && content[i+1]==='\n')i++;
+      row.push(cell);rows.push(row);row=[];cell='';
+    }else cell+=c;
+  }
+  if(quoted)throw Error('O CSV tem aspas não fechadas.');
+  if(row.length||cell.length){row.push(cell);rows.push(row);}
+  return rows.filter(r=>r.some(v=>v.trim()));
+}
+$('btnExport').addEventListener('click',exportCsv);
+$('btnImport').addEventListener('click',()=>$('fileImport').click());
+$('fileImport').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];if(!file)return;
+  try{
+    if(!/\.csv$/i.test(file.name))throw Error('Selecione um arquivo .csv.');
+    const rows=parseCsv(await file.text());
+    if(rows.length<2)throw Error('O arquivo não contém avaliações.');
+    const headers=rows.shift().map(v=>v.trim());
+    const valid=csvLabels.filter(label=>headers.includes(label));
+    if(!headers.includes('Nome do Aluno')||valid.length<3){
+      throw Error('Cabeçalhos não reconhecidos. Use um CSV exportado pela ficha.');
+    }
+    const index=new Map(headers.map((label,i)=>[label,i]));
+    const read=(row,label)=>csvUnprotect(String(row[index.get(label)]??''));
+    const existing=new Map(cache.map(item=>[String(item.id),item]));
+    let added=0,updated=0;
+    for(const row of rows){
+      if(row.length!==headers.length)throw Error('Uma linha do CSV tem um número incorreto de colunas.');
+      const data=Object.fromEntries(csvLabels.map(label=>[label,index.has(label)?read(row,label):'']));
+      const importedId=index.has('ID')?read(row,'ID').trim():'';
+      const id=importedId || Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);
+      const item={id,dateStr:index.has('Salvo em')?read(row,'Salvo em'):new Date().toLocaleString('pt-BR'),
+        name:data['Nome do Aluno']||'Sem nome',evalDate:data['Data da Avaliação']||'',data};
+      if(existing.has(id)){
+        const at=cache.findIndex(v=>String(v.id)===id);
+        if(at>=0)cache[at]=item;
+        updated++;
+      }else{cache.push(item);added++;}
+      existing.set(id,item);
+    }
+    const saved=await storage.set('eval_cache',JSON.stringify(cache));
+    renderCache();
+    showToast(added+' importado(s), '+updated+' atualizado(s)'+(saved?'':' (apenas nesta sessão)'));
+  }catch(err){await showAppAlert('Erro ao importar CSV', 'Não foi possível importar o arquivo: '+err.message);}
+  finally{e.target.value='';}
+});
+(async function init(){
+  await storage.init();
+  cache=parseJson(await storage.get('eval_cache'),[]);
+  if(!Array.isArray(cache))cache=[];
+  const draft=parseJson(await storage.get('temp_draft'),{});
+  if(draft && typeof draft==='object')restoreForm(draft);
+  updateCount();highlight(0);showStorageWarning();cacheReady=true;
+})();
+</script>
+</body>
+</html>
