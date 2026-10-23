@@ -74,6 +74,17 @@ textarea.nav-input{min-height:76px;resize:vertical}.sub-panel{border-radius:9px;
 .cache-actions .button{min-height:42px;background:#f8fafc}
 .cache-cleanup{margin-top:12px;padding-top:10px;border-top:1px solid #f1f5f9;text-align:right}
 .cache-cleanup .button{background:transparent;border:0;padding:4px 0;min-height:28px;font-size:11px}
+/* Pesquisa de fichas salvas */
+.saved-search{margin:0 0 12px}
+.saved-search label{display:block;font-size:12px;font-weight:750;color:#334155;margin:0 0 7px}
+.search-field{display:flex;align-items:center;gap:9px;padding:0 10px;min-height:46px;background:#fff;border:1px solid #cbd5e1;border-radius:11px;transition:border-color .15s,box-shadow .15s}
+.search-field:focus-within{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb18}
+.search-field svg{width:18px;height:18px;flex:none;stroke:#64748b}
+.search-field input{width:100%;min-width:0;flex:1;border:0;outline:0;background:transparent;font-size:14px;color:#0f172a;height:44px}
+.search-field input::placeholder{color:#94a3b8}
+.clear-search{display:grid;place-items:center;flex:none;width:30px;height:30px;padding:0;border:0;border-radius:8px;background:#f1f5f9;color:#64748b;font-size:20px;line-height:1}
+.clear-search:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.search-summary{font-size:11px;color:#64748b;margin:6px 1px 0;min-height:16px}
 
 .dialog-bg{position:fixed;inset:0;background:#0f172aaa;display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
 .dialog{background:white;border-radius:14px;width:min(100%,530px);padding:16px}.dialog h3{margin:0 0 6px;font-size:15px}.dialog p{font-size:12px;color:#64748b}
@@ -154,6 +165,15 @@ textarea.nav-input{min-height:76px;resize:vertical}.sub-panel{border-radius:9px;
       </div>
       <div class="cache-cleanup"><button class="button danger" id="btnClearCache" type="button">Apagar histórico</button></div>
     </div>
+    <section class="saved-search" aria-label="Pesquisar fichas salvas">
+      <label for="searchFichas">Buscar aluno</label>
+      <div class="search-field">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="searchFichas" type="search" placeholder="Nome ou matrícula" autocomplete="off" spellcheck="false" aria-describedby="searchSummary">
+        <button id="clearSearch" class="clear-search hidden" type="button" aria-label="Limpar pesquisa">×</button>
+      </div>
+      <p id="searchSummary" class="search-summary" role="status" aria-live="polite"></p>
+    </section>
     <div id="cacheList"></div><input type="file" id="fileImport" accept=".csv,text/csv,text/plain">
     <footer class="cache-footer">
       <p class="footer-byline">Desenvolvido por <strong>Adriano Oliveira</strong></p>
@@ -465,11 +485,32 @@ function switchTab(tab){
 $('tabFicha').addEventListener('click',()=>switchTab('ficha'));
 $('tabCache').addEventListener('click',()=>switchTab('cache'));
 function element(tag,cl,txt){const n=document.createElement(tag);if(cl)n.className=cl;if(txt!==undefined)n.textContent=txt;return n;}
+// A pesquisa consulta somente os registros salvos neste dispositivo.
+function normalizeSearch(value){
+  return String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim();
+}
+$('searchFichas').addEventListener('input',renderCache);
+$('clearSearch').addEventListener('click',()=>{
+  $('searchFichas').value='';
+  renderCache();
+  $('searchFichas').focus();
+});
 function renderCache(){
   showStorageWarning();updateCount();
   const root=$('cacheList');root.replaceChildren();
+  const query=$('searchFichas').value.trim();
+  const terms=normalizeSearch(query).split(/\s+/).filter(Boolean);
+  $('clearSearch').classList.toggle('hidden',!query);
+  const visible=terms.length?cache.filter(item=>{
+    const searchable=normalizeSearch([item.name,item.data?.['Nome do Aluno'],item.data?.['Matrícula']].filter(Boolean).join(' '));
+    return terms.every(term=>searchable.includes(term));
+  }):cache;
+  $('searchSummary').textContent=terms.length
+    ?`${visible.length} de ${cache.length} ${cache.length===1?'ficha salva':'fichas salvas'}`
+    :`${cache.length} ${cache.length===1?'ficha salva':'fichas salvas'}`;
   if(cache.length===0){root.append(element('p','muted','Nenhuma ficha salva neste dispositivo.'));return;}
-  cache.forEach(item=>{
+  if(visible.length===0){root.append(element('p','muted','Nenhuma ficha encontrada. Tente outro nome ou matrícula.'));return;}
+  visible.forEach(item=>{
     const wrap=element('div','item'),info=element('div','info'),actions=element('div','actions');
     info.append(element('strong','',item.name||'Sem nome'),element('small','', 'Avaliação: '+(item.evalDate||'N/D')+' · Salvo em: '+(item.dateStr||'N/D')));
     const btnLoad=element('button','button blue','Abrir');btnLoad.type='button';
